@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { createUser, findUserByEmail } = require("../models/userModel");
 
 // Register User
@@ -6,14 +7,12 @@ const registerUser = async (req, res) => {
   try {
     const { full_name, email, phone, password } = req.body;
 
-    // field validation
     if (!full_name || !email || !phone || !password) {
       return res.status(400).json({
         message: "All fields are required"
       });
     }
 
-    // Name validation 
     const nameRegex = /^[A-Za-z ]+$/;
     if (!nameRegex.test(full_name)) {
       return res.status(400).json({
@@ -21,7 +20,6 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Email  validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
@@ -29,7 +27,6 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Phone number validation
     const phoneRegex = /^[0-9]{10}$/;
     if (!phoneRegex.test(phone)) {
       return res.status(400).json({
@@ -37,14 +34,12 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Password validation
     if (password.length < 6) {
       return res.status(400).json({
         message: "Password must be at least 6 characters"
       });
     }
 
-    // if user already exists
     const existingUser = await findUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({
@@ -52,10 +47,8 @@ const registerUser = async (req, res) => {
       });
     }
 
-    //  Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //  Create user
     const user = await createUser(full_name, email, phone, hashedPassword);
 
     res.status(201).json({
@@ -77,14 +70,12 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    //  Required validation
     if (!email || !password) {
       return res.status(400).json({
         message: "Email and password are required"
       });
     }
 
-    //  Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
@@ -92,7 +83,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-    //  Check if user exists
     const user = await findUserByEmail(email);
 
     if (!user) {
@@ -101,7 +91,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-    //  Compare password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -110,9 +99,16 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
     res.json({
       message: "Login successful",
-      user
+      token
     });
 
   } catch (error) {

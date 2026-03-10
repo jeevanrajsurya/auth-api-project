@@ -2,11 +2,20 @@ const express = require("express");
 const router = express.Router();
 
 const { registerUser, loginUser } = require("../controllers/authController");
+const authMiddleware = require("../middleware/authMiddleware");
 
-// Register API
+// Register
 router.post("/register", registerUser);
 
-// Login API
+// Login
 router.post("/login", loginUser);
+
+// Protected Route (DUMMY PR)
+router.get("/profile", authMiddleware, (req, res) => {
+  res.json({
+    message: "Profile accessed successfully",
+    user: req.user
+  });
+});
 
 module.exports = router;
