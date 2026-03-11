@@ -2,7 +2,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
-
 const generateAccessToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email },
@@ -26,14 +25,14 @@ const registerUser = async (req, res) => {
 
     let { full_name, email, phone, password } = req.body;
 
-                          //SANITIZE INPUT
+    // SANITIZE INPUT
 
     full_name = full_name?.trim();
     email = email?.trim().toLowerCase();
     phone = phone?.replace(/\D/g, "");
     password = password?.trim();
 
-                          //VALIDATION 
+    // VALIDATION
 
     if (!full_name || !email || !phone || !password) {
       return res.status(400).json({
@@ -41,6 +40,7 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // NAME VALIDATION
     const nameRegex = /^[A-Za-z ]+$/;
     if (!nameRegex.test(full_name)) {
       return res.status(400).json({
@@ -48,6 +48,7 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // EMAIL VALIDATION
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
@@ -55,6 +56,7 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // PHONE VALIDATION
     const phoneRegex = /^[0-9]{10}$/;
     if (!phoneRegex.test(phone)) {
       return res.status(400).json({
@@ -62,12 +64,18 @@ const registerUser = async (req, res) => {
       });
     }
 
-    if (password.length < 6) {
+    // PASSWORD VALIDATION (same as frontend)
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+
+    if (!passwordRegex.test(password)) {
       return res.status(400).json({
-        message: "Password must be at least 6 characters"
+        message:
+          "Password must be at least 8 characters and include uppercase, lowercase, number and special character"
       });
     }
 
+    // CHECK EXISTING USER
     const existingUser = await User.findOne({ where: { email } });
 
     if (existingUser) {
@@ -76,6 +84,7 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // HASH PASSWORD
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
@@ -110,7 +119,7 @@ const loginUser = async (req, res) => {
 
     let { email, password } = req.body;
 
-              //SANITIZE INPUT
+    // SANITIZE INPUT
 
     email = email?.trim().toLowerCase();
     password = password?.trim();
