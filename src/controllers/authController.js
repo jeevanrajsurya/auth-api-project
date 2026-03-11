@@ -19,11 +19,21 @@ const generateRefreshToken = (user) => {
   );
 };
 
-//REGISTER 
+// REGISTER
 
 const registerUser = async (req, res) => {
   try {
-    const { full_name, email, phone, password } = req.body;
+
+    let { full_name, email, phone, password } = req.body;
+
+                          //SANITIZE INPUT
+
+    full_name = full_name?.trim();
+    email = email?.trim().toLowerCase();
+    phone = phone?.trim();
+    password = password?.trim();
+
+                          //VALIDATION 
 
     if (!full_name || !email || !phone || !password) {
       return res.status(400).json({
@@ -91,13 +101,19 @@ const registerUser = async (req, res) => {
   }
 };
 
-//LOGIN 
+
+// LOGIN
 
 const loginUser = async (req, res) => {
 
   try {
 
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+
+              //SANITIZE INPUT
+
+    email = email?.trim().toLowerCase();
+    password = password?.trim();
 
     if (!email || !password) {
       return res.status(400).json({
@@ -153,7 +169,8 @@ const loginUser = async (req, res) => {
   }
 };
 
-// REFRESH TOKEN 
+
+// REFRESH TOKEN
 
 const refreshAccessToken = async (req, res) => {
 
@@ -200,6 +217,7 @@ const refreshAccessToken = async (req, res) => {
 
   }
 };
+
 
 module.exports = {
   registerUser,
