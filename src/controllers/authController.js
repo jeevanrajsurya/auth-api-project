@@ -30,7 +30,7 @@ const registerUser = async (req, res) => {
 
     full_name = full_name?.trim();
     email = email?.trim().toLowerCase();
-    phone = phone?.trim();
+    phone = phone?.replace(/\D/g, "");
     password = password?.trim();
 
                           //VALIDATION 
