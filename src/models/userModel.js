@@ -1,28 +1,34 @@
-const pool = require("../config/db");
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/db");
 
-// create new user
-const createUser = async (full_name, email, phone, password) => {
-  const query = `
-    INSERT INTO users (full_name, email, phone, password)
-    VALUES ($1, $2, $3, $4)
-    RETURNING *;
-  `;
+const User = sequelize.define("User", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  full_name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  phone: {
+    type: DataTypes.STRING
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  refreshToken: {
+    type: DataTypes.TEXT
+  }
+}, {
+  tableName: "users",
+  timestamps: false
+});
 
-  const values = [full_name, email, phone, password];
-
-  const result = await pool.query(query, values);
-  return result.rows[0];
-};
-
-// find user by email
-const findUserByEmail = async (email) => {
-  const query = "SELECT * FROM users WHERE email = $1";
-
-  const result = await pool.query(query, [email]);
-  return result.rows[0];
-};
-
-module.exports = {
-  createUser,
-  findUserByEmail,
-};
+module.exports = User;
