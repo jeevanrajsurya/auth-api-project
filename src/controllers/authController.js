@@ -64,7 +64,7 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // PASSWORD VALIDATION (same as frontend)
+    // PASSWORD VALIDATION 
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
