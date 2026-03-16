@@ -31,6 +31,11 @@ const User = sequelize.define("User", {
 
   refreshToken: {
     type: DataTypes.TEXT
+  },
+
+  role: {
+    type: DataTypes.STRING,
+    defaultValue: "user"
   }
 
 }, {
