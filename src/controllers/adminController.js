@@ -80,7 +80,7 @@ const adminLogout = async (req, res) => {
       });
     }
 
-    // remove refresh token
+    // Remove refresh token
     admin.refreshToken = null;
 
     await admin.save();
