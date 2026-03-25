@@ -100,7 +100,7 @@ const adminLogout = async (req, res) => {
 };
 
 
-// DASHBOARD STATS
+// DASHBOARD
 
 const getDashboardStats = async (req, res) => {
 
