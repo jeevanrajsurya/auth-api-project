@@ -58,23 +58,23 @@ POST /api/auth/login
 ### Refresh Access Token
 POST /api/auth/refresh-token
 
-<!-- ## Protected User Route
-### Get User Profile -->
+## Protected User Route
+### Get User Profile
 GET /api/auth/profile
 Header:
 Authorization: Bearer ACCESS_TOKEN
 
 
-<!-- # Admin APIs -->
-<!-- ### Admin Login -->
+# Admin APIs
+### Admin Login
 POST /api/admin/login
-<!-- ### Admin Logout -->
+### Admin Logout
 POST /api/admin/logout
 Header:
 Authorization: Bearer ACCESS_TOKEN
 
-<!-- # Admin Dashboard APIs -->
-<!-- ### Dashboard Statistics -->
+# Admin Dashboard APIs
+### Dashboard Statistics
 GET /api/admin/dashboard/stats
 ### Recent Bookings
 GET /api/admin/dashboard/recent-bookings
