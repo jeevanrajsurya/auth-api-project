@@ -5,7 +5,6 @@ This project includes **User Authentication APIs and Admin Dashboard APIs** with
 
 
 ## Features
-
 ### User Authentication
 
 * User Registration API
