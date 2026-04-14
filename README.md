@@ -80,10 +80,10 @@ GET /api/admin/dashboard/recent-bookings
 
 # Security
 
-<!-- * Passwords are hashed using bcrypt
+* Passwords are hashed using bcrypt
 * Authentication using JWT Access Tokens
 * Refresh token support for session management
 * Protected routes using middleware
 * Role-based access control for admin routes
 * Input validation and sanitization implemented
- -->
+
